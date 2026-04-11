@@ -55,7 +55,7 @@ def fetch_recent_articles(days_back=7, dry_run=False):
     prune_cutoff = datetime.now() - timedelta(days=CACHE_TTL_DAYS)
     today = datetime.now().strftime("%Y-%m-%d")
 
-    cache = load_cache()
+    cache = {} if dry_run else load_cache()
     articles = []
     failed_sources = []
 
