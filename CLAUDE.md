@@ -12,9 +12,9 @@ Job Joseph — Principal Program Manager, Revenue Operations. AI PM identity. Bu
 ## Stack
 - **Language**: Python 3.11.9
 - **LLM**: Claude via Anthropic API (`claude-opus-4-5`)
-- **Libraries**: `anthropic`, `feedparser`, `python-dotenv`
+- **Libraries**: `anthropic`, `feedparser`, `python-dotenv`, `markdown`
 - **Delivery**: Gmail via SMTP SSL
-- **Scheduler**: Windows Task Scheduler → `run_tracker.bat`
+- **Scheduler**: Windows Task Scheduler → `run_tracker.bat` (cron/launchd/systemd configs also in `scheduler/`)
 - **Environment**: `.env` file with `ANTHROPIC_API_KEY`, `EMAIL_ADDRESS`, `EMAIL_PASSWORD`
 
 ## Project structure
@@ -22,34 +22,46 @@ Job Joseph — Principal Program Manager, Revenue Operations. AI PM identity. Bu
 signal-digest/
 ├── signal_digest/
 │   ├── __init__.py
-│   ├── fetcher.py       # pulls RSS feeds, filters by date
+│   ├── fetcher.py       # pulls RSS feeds, filters by date, deduplicates via cache.json
 │   ├── agent.py         # Claude reasoning loop — the actual agent
-│   └── deliver.py       # HTML email + local archive
+│   └── deliver.py       # HTML email (via markdown library) + local archive
+├── scheduler/           # cross-platform scheduler configs
+│   ├── cron.md          # Linux cron setup
+│   ├── launchd.plist    # macOS LaunchAgent
+│   └── systemd/         # Linux systemd service + timer
 ├── archive/             # weekly digests saved as markdown
 ├── main.py              # entry point
 ├── run_tracker.bat      # Windows Task Scheduler trigger
 ├── .env                 # API key + email credentials (not committed)
+├── cache.json           # seen article URLs — prevents re-surfacing (not committed)
 ├── CLAUDE.md            # this file
+├── spec.md              # architecture, sources, stack
+├── roadmap.md           # what's done and what's next
 └── learnings.md         # explanation of agent vs script, architecture
 ```
 
 ## How it works
-1. `fetcher.py` pulls articles from 7 RSS sources published in the last 7 days
-2. `agent.py` sends all articles to Claude with a persona-specific system prompt
-3. Claude filters ruthlessly, extracts signals (not summaries), clusters by theme, writes digest
-4. `deliver.py` converts markdown to HTML, emails it, saves a `.md` copy to `archive/`
-5. Windows Task Scheduler runs `run_tracker.bat` every Monday at 10 AM IST
+1. `fetcher.py` pulls articles from 12 RSS sources published in the last 7 days, skipping any URLs already in `cache.json`
+2. `agent.py` sends all new articles to Claude with a persona-specific system prompt
+3. Claude filters ruthlessly, extracts signals (not summaries), clusters by theme, writes digest — constrained to only reason over the provided articles
+4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it, saves a `.md` copy to `archive/`
+5. Windows Task Scheduler runs `run_tracker.bat` every Monday at 10 AM IST (Linux/macOS configs in `scheduler/`)
 
 ## RSS Sources (defined in fetcher.py)
-| Name | Focus |
+| Name | Lens area |
 |---|---|
-| Simon Willison | Independent AI analysis |
-| Lenny's Newsletter | Product thinking |
-| Hacker News (100+ points) | High-signal tech news |
-| Benedict Evans | Tech strategy |
-| Salesforce Ben | CRM / Agentforce |
-| Kyle Poyar | GTM / growth |
-| The Rundown AI | Daily AI news |
+| Simon Willison | Agentic AI — independent analysis |
+| Lenny's Newsletter | AI PM — product thinking |
+| Hacker News (100+ points) | Builder mindset — high-signal tech news |
+| Benedict Evans | AI PM — tech strategy |
+| Salesforce Ben | RevOps — CRM / Agentforce |
+| Kyle Poyar | RevOps — GTM / growth |
+| The Rundown AI | Agentic AI — daily AI news |
+| LangChain Blog | Agentic AI — frameworks and tooling |
+| Hugging Face Blog | Agentic AI — models and open source |
+| Andrew Chen | AI PM — product and growth |
+| OpenView Partners | RevOps — B2B GTM strategy |
+| GitHub Changelog | Builder mindset — platform and tooling updates |
 
 ## Job's lens (defined in agent.py system prompt)
 - Agentic AI — how agents are built, where they're heading
@@ -58,17 +70,16 @@ signal-digest/
 - Builder mindset — tools, frameworks, open source
 
 ## Known limitations / future work
-- [ ] Deduplication — skip articles already seen in previous weeks (URL cache in `.json`)
-- [ ] Error handling — wrap each RSS fetch in try/except so one bad feed doesn't crash the run
-- [ ] HTML rendering — markdown-to-HTML is a lightweight custom converter; could be replaced with `markdown` library for robustness
-- [ ] Source expansion — X/Twitter accounts, YouTube channels (harder, v2)
-- [ ] Agent hallucination guard — agent occasionally draws on training knowledge, not just fetched articles. Need to tighten prompt to reason only over provided content.
+- [ ] Memory — store previous digests and let the agent surface multi-week patterns
+- [ ] Deduplication pruning — clear `cache.json` entries older than N weeks
+- [ ] MCP integration — standardise tools as the project grows
+- [ ] Source expansion v2 — X/Twitter accounts, YouTube channels
 
 ## Environment setup (fresh machine)
 ```bash
 python -m venv venv
 venv\Scripts\activate
-pip install anthropic feedparser python-dotenv
+pip install anthropic feedparser python-dotenv markdown
 ```
 Add `.env` with:
 ```

@@ -1,0 +1,16 @@
+[Unit]
+Description=Signal Digest — weekly RSS digest
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Replace with the absolute path to your project
+WorkingDirectory=/home/YOUR_USERNAME/signal-digest
+# Replace with the path to your venv Python
+ExecStart=/home/YOUR_USERNAME/signal-digest/venv/bin/python main.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

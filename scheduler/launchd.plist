@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  macOS LaunchAgent for Signal Digest
+  Runs every Monday at 10:00 AM local time.
+
+  Setup:
+    1. Copy this file to ~/Library/LaunchAgents/com.signal-digest.plist
+    2. Edit the paths below to match your setup
+    3. Load the agent:
+         launchctl load ~/Library/LaunchAgents/com.signal-digest.plist
+    4. To unload:
+         launchctl unload ~/Library/LaunchAgents/com.signal-digest.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.signal-digest</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <!-- Replace with the absolute path to your venv Python -->
+        <string>/Users/YOUR_USERNAME/signal-digest/venv/bin/python</string>
+        <!-- Replace with the absolute path to main.py -->
+        <string>/Users/YOUR_USERNAME/signal-digest/main.py</string>
+    </array>
+
+    <!-- Run every Monday at 10:00 AM -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>10</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- Log stdout and stderr to the same file -->
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USERNAME/signal-digest/logs/signal_digest.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USERNAME/signal-digest/logs/signal_digest.log</string>
+
+    <!-- Run even if the scheduled time was missed (e.g. machine was asleep) -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

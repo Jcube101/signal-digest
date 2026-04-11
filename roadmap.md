@@ -2,16 +2,17 @@
 
 ## Planned
 
-- [ ] Deduplication — skip articles seen in previous weeks (URL cache in `.json`)
-- [ ] Error handling — wrap each RSS fetch in try/except so one bad feed doesn't crash the run
-- [ ] Hallucination guard — tighten system prompt to constrain agent to fetched content only
-- [ ] HTML rendering — replace lightweight custom converter with `markdown` library for robustness
-- [ ] Source expansion — add more feeds per lens area
-- [ ] Cross-platform scheduler — alternatives to Windows Task Scheduler (cron, launchd)
+- [x] Error handling — graceful failure per source (bozo feed detection + try/except)
+- [x] Hallucination guard — system prompt constrained to fetched content only
+- [x] Deduplication — URL cache in `cache.json`; articles already seen are skipped
+- [x] HTML rendering — replaced custom regex converter with `markdown` library
+- [x] Source expansion — 5 new feeds added across all lens areas
+- [x] Cross-platform scheduler — cron, launchd, and systemd configs in `scheduler/`
 
 ## Longer term
 
 - [ ] Memory — store previous digests and let the agent surface multi-week patterns
-- [ ] Deduplication across weeks — never surface the same article twice
+- [ ] Deduplication pruning — clear `cache.json` entries older than N weeks
 - [ ] MCP integration — standardise tools across agents as the project grows
 - [ ] Source expansion v2 — X/Twitter accounts, YouTube channels
+- [ ] Dry-run mode — fetch and filter without sending email

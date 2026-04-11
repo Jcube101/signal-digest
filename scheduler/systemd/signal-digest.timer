@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Signal Digest every Monday at 10:00 AM
+Requires=signal-digest.service
+
+[Timer]
+# Every Monday at 10:00 AM (system local time)
+OnCalendar=Mon *-*-* 10:00:00
+# If the timer was missed (e.g. machine was off), run at next opportunity
+Persistent=true
+
+[Install]
+WantedBy=timers.target

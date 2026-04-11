@@ -12,5 +12,11 @@ __pycache__/
 # Personal digests — private
 archive/
 
+# Deduplication cache — local state, not committed
+cache.json
+
+# Scheduler logs
+logs/
+
 # Stray folders
 -p/

@@ -1,6 +1,6 @@
 import smtplib
 import os
-import re
+import markdown
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -9,40 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def markdown_to_html(text):
-    lines = text.split("\n")
-    html_lines = []
-    
-    for line in lines:
-        # h1
-        if line.startswith("# "):
-            line = f"<h1>{line[2:]}</h1>"
-        # h2
-        elif line.startswith("## "):
-            line = f"<h2>{line[3:]}</h2>"
-        # h3
-        elif line.startswith("### "):
-            line = f"<h3>{line[4:]}</h3>"
-        # horizontal rule
-        elif line.strip() == "---":
-            line = "<hr>"
-        # bullet points
-        elif line.startswith("- "):
-            line = f"<li>{line[2:]}</li>"
-        # blank line
-        elif line.strip() == "":
-            line = "<br>"
-        # regular paragraph
-        else:
-            line = f"<p>{line}</p>"
-
-        # inline bold
-        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
-        # inline links
-        line = re.sub(r"\[(.+?)\]\((.+?)\)", r'<a href="\2">\1</a>', line)
-
-        html_lines.append(line)
-
-    body = "\n".join(html_lines)
+    html_body = markdown.markdown(text, extensions=["extra", "nl2br"])
 
     return f"""
     <html>
@@ -96,6 +63,28 @@ def markdown_to_html(text):
             strong {{
                 font-weight: bold;
             }}
+            blockquote {{
+                border-left: 3px solid #e85d04;
+                padding-left: 16px;
+                color: #666;
+                margin: 16px 0;
+            }}
+            code {{
+                background: #f0f0f0;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: monospace;
+            }}
+            pre {{
+                background: #f0f0f0;
+                padding: 12px;
+                border-left: 3px solid #e85d04;
+                overflow-x: auto;
+            }}
+            pre code {{
+                background: none;
+                padding: 0;
+            }}
             .footer {{
                 margin-top: 40px;
                 font-size: 13px;
@@ -106,7 +95,7 @@ def markdown_to_html(text):
         </style>
     </head>
     <body>
-        {body}
+        {html_body}
         <div class="footer">Signal Digest — running locally on your machine</div>
     </body>
     </html>
@@ -127,25 +116,39 @@ def save_to_archive(digest_text):
     return filename
 
 def send_digest(digest_text):
+    try:
+        save_to_archive(digest_text)
+    except Exception as e:
+        print(f"  WARNING: Could not save to archive: {e}")
+
     sender = os.getenv("EMAIL_ADDRESS")
     password = os.getenv("EMAIL_PASSWORD")
     recipient = os.getenv("EMAIL_ADDRESS")
 
-    save_to_archive(digest_text)
+    if not sender or not password:
+        print("  ERROR: EMAIL_ADDRESS or EMAIL_PASSWORD not set in .env — skipping email send.")
+        return
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"📡 Signal Digest — {datetime.now().strftime('%b %d, %Y')}"
-    msg["From"] = sender
-    msg["To"] = recipient
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"📡 Signal Digest — {datetime.now().strftime('%b %d, %Y')}"
+        msg["From"] = sender
+        msg["To"] = recipient
 
-    text_part = MIMEText(digest_text, "plain")
-    html_part = MIMEText(markdown_to_html(digest_text), "html")
+        text_part = MIMEText(digest_text, "plain")
+        html_part = MIMEText(markdown_to_html(digest_text), "html")
 
-    msg.attach(text_part)
-    msg.attach(html_part)
+        msg.attach(text_part)
+        msg.attach(html_part)
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(sender, password)
-        server.sendmail(sender, recipient, msg.as_string())
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender, password)
+            server.sendmail(sender, recipient, msg.as_string())
 
-    print("Digest sent to your inbox.")
+        print("Digest sent to your inbox.")
+    except smtplib.SMTPAuthenticationError:
+        print("  ERROR: Gmail authentication failed. Check EMAIL_ADDRESS and EMAIL_PASSWORD in .env.")
+    except smtplib.SMTPException as e:
+        print(f"  ERROR: SMTP error — {e}")
+    except Exception as e:
+        print(f"  ERROR: Failed to send email — {e}")

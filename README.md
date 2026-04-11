@@ -15,7 +15,7 @@ git clone https://github.com/Jcube101/signal-digest.git
 cd signal-digest
 python -m venv venv
 venv\Scripts\activate        # Windows
-pip install anthropic feedparser python-dotenv
+pip install anthropic feedparser python-dotenv markdown
 ```
 
 Copy `.env.example` to `.env` and fill in your credentials:
@@ -36,9 +36,11 @@ python main.py
 
 ---
 
-## Scheduling (Windows)
+## Scheduling
 
-Use Windows Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
+**Windows:** Use Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
+
+**Linux / macOS:** See the `scheduler/` directory for cron, launchd (macOS), and systemd configs.
 
 ---
 
