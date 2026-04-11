@@ -107,7 +107,7 @@ def markdown_to_html(text):
     </head>
     <body>
         {body}
-        <div class="footer">Weak Signal Tracker — running locally on your machine</div>
+        <div class="footer">Signal Digest — running locally on your machine</div>
     </body>
     </html>
     """
@@ -120,7 +120,7 @@ def save_to_archive(digest_text):
     filename = f"{archive_dir}/digest_{week_label}.md"
 
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"# Weak Signal Tracker — Week of {week_label}\n\n")
+        f.write(f"# Signal Digest — Week of {week_label}\n\n")
         f.write(digest_text)
 
     print(f"Digest saved to {filename}")
@@ -134,7 +134,7 @@ def send_digest(digest_text):
     save_to_archive(digest_text)
 
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"📡 Weak Signal Tracker — {datetime.now().strftime('%b %d, %Y')}"
+    msg["Subject"] = f"📡 Signal Digest — {datetime.now().strftime('%b %d, %Y')}"
     msg["From"] = sender
     msg["To"] = recipient
 

@@ -1,4 +1,4 @@
-# Learnings — Weak Signal Tracker
+# Learnings — Signal Digest
 
 ## What I built and why it matters
 

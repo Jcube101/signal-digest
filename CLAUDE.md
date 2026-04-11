@@ -1,4 +1,4 @@
-# Weak Signal Tracker — Project Context for Claude
+# Signal Digest — Project Context for Claude
 
 ## What this project is
 A personal AI agent that monitors a curated list of RSS feeds, filters articles through Job's professional lens, and delivers a weekly digest to his Gmail inbox every Monday at 10 AM IST. Digests are also saved locally to an `archive/` folder.
@@ -7,7 +7,7 @@ A personal AI agent that monitors a curated list of RSS feeds, filters articles 
 Job Joseph — Principal Program Manager, Revenue Operations. AI PM identity. Builder. Portfolio at job-joseph.com, GitHub at Jcube101.
 
 ## Project location
-`C:\Users\jobjo\projects\weak-signal-tracker`
+`C:\Users\jobjo\Github\signal-digest`
 
 ## Stack
 - **Language**: Python 3.11.9
@@ -19,8 +19,8 @@ Job Joseph — Principal Program Manager, Revenue Operations. AI PM identity. Bu
 
 ## Project structure
 ```
-weak-signal-tracker/
-├── weak_signal_tracker/
+signal-digest/
+├── signal_digest/
 │   ├── __init__.py
 │   ├── fetcher.py       # pulls RSS feeds, filters by date
 │   ├── agent.py         # Claude reasoning loop — the actual agent
