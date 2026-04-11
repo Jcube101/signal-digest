@@ -33,7 +33,7 @@ signal-digest/
 ├── main.py              # entry point
 ├── run_tracker.bat      # Windows Task Scheduler trigger
 ├── .env                 # API key + email credentials (not committed)
-├── cache.json           # seen article URLs — prevents re-surfacing (not committed)
+├── cache.json           # URL cache with 21-day TTL — prevents re-surfacing (not committed)
 ├── CLAUDE.md            # this file
 ├── spec.md              # architecture, sources, stack
 ├── roadmap.md           # what's done and what's next
@@ -41,11 +41,12 @@ signal-digest/
 ```
 
 ## How it works
-1. `fetcher.py` pulls articles from 12 RSS sources published in the last 7 days, skipping any URLs already in `cache.json`
+1. `fetcher.py` pulls articles from 12 RSS sources published in the last 7 days, skipping URLs cached in `cache.json` within the last 21 days
 2. `agent.py` sends all new articles to Claude with a persona-specific system prompt
-3. Claude filters ruthlessly, extracts signals (not summaries), clusters by theme, writes digest — constrained to only reason over the provided articles
-4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it, saves a `.md` copy to `archive/`
+3. Claude filters ruthlessly, extracts signals as markdown hyperlinks, clusters by theme, writes digest — constrained to only reason over the provided articles
+4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it (with "Job's Weekly Signal Digest" heading and date range), saves a `.md` copy to `archive/`
 5. Windows Task Scheduler runs `run_tracker.bat` every Monday at 10 AM IST (Linux/macOS configs in `scheduler/`)
+6. Run `python main.py --dry-run` to test the full pipeline without updating the cache or sending email
 
 ## RSS Sources (defined in fetcher.py)
 | Name | Lens area |
@@ -71,7 +72,6 @@ signal-digest/
 
 ## Known limitations / future work
 - [ ] Memory — store previous digests and let the agent surface multi-week patterns
-- [ ] Deduplication pruning — clear `cache.json` entries older than N weeks
 - [ ] MCP integration — standardise tools as the project grows
 - [ ] Source expansion v2 — X/Twitter accounts, YouTube channels
 
