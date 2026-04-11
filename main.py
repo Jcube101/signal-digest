@@ -6,7 +6,7 @@ articles = fetch_recent_articles()
 digest = run_agent(articles)
 
 print("\n" + "="*60)
-print("WEAK SIGNAL TRACKER — WEEKLY DIGEST")
+print("SIGNAL DIGEST — WEEKLY DIGEST")
 print("="*60 + "\n")
 print(digest)
 
