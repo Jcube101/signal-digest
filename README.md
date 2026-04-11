@@ -36,9 +36,11 @@ python main.py
 
 ---
 
-## Scheduling (Windows)
+## Scheduling
 
-Use Windows Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
+**Windows:** Use Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
+
+**Linux / macOS:** See the `scheduler/` directory for cron, launchd (macOS), and systemd configs.
 
 ---
 

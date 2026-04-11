@@ -147,11 +147,23 @@ During the first run, the agent produced references to articles (Project Glasswi
 
 ---
 
-## What I'd build next on top of this
+## What I built next
 
-**Deduplication** — a simple JSON file that stores seen article URLs so the agent never surfaces the same piece twice.
+**Deduplication** ✓ — `cache.json` stores seen article URLs between runs. The fetcher loads the cache at startup and skips any URL already seen, then saves the new batch before returning. Corrupt cache falls back gracefully to an empty set.
 
-**Error handling** — wrap each RSS fetch in try/except so one broken feed doesn't crash the entire run.
+**Error handling** ✓ — Each RSS source is now wrapped in try/except. `feed.bozo` catches silent feedparser failures (network errors don't raise exceptions — they return a malformed feed object). The agent and email send are also guarded independently so one failure doesn't cascade. `main.py` exits with code 0/1 so schedulers can detect failures.
+
+**Hallucination guard** ✓ — The system prompt now includes a CRITICAL CONSTRAINTS block that explicitly instructs Claude to reason only from the provided articles, skip anything too vague to assess, and not draw on training knowledge. The user message reinforces it. Cross-article synthesis (spotting a trend across two articles) is still permitted — the constraint is against training knowledge, not synthesis.
+
+**HTML rendering** ✓ — Replaced the custom line-by-line regex converter with the `markdown` library (`extra` + `nl2br` extensions). Handles nested markdown, tables, code blocks, and blockquotes correctly — things the regex approach silently broke.
+
+**Source expansion** ✓ — Added 5 feeds: LangChain Blog, Hugging Face Blog (Agentic AI), Andrew Chen (AI PM), OpenView Partners (RevOps), GitHub Changelog (Builder mindset). The agent's system prompt naturally filters new sources through Job's lens — no prompt changes needed.
+
+**Cross-platform scheduler** ✓ — Added `scheduler/` with cron, launchd (macOS), and systemd configs so the pipeline isn't tied to Windows Task Scheduler.
+
+---
+
+## What's still worth building
 
 **Memory** — store the agent's previous digests and let it notice patterns over time. "This is the third week Simon Willison has written about on-device AI — this is now a trend, not a signal."
 

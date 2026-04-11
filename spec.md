@@ -4,10 +4,10 @@
 
 Scheduler → Fetcher → Agent → Delivery
 
-1. **Fetcher** pulls articles from 7 RSS sources published in the last 7 days
-2. **Agent** reasons over the content — filtering, clustering, and extracting signals (not summaries)
-3. **Delivery** converts the digest to HTML and emails it, while saving a local markdown copy to `archive/`
-4. **Scheduler** runs the whole pipeline every Monday at 10 AM via Windows Task Scheduler
+1. **Fetcher** pulls articles from 12 RSS sources published in the last 7 days; skips URLs already seen in `cache.json`
+2. **Agent** reasons over the content — filtering, clustering, and extracting signals (not summaries), constrained to only the provided articles
+3. **Delivery** converts the digest to HTML via the `markdown` library and emails it, while saving a local markdown copy to `archive/`
+4. **Scheduler** runs the whole pipeline every Monday at 10 AM (Windows Task Scheduler, cron, launchd, or systemd — see `scheduler/`)
 
 The agent is not a summarizer. It makes judgment calls about what matters, clusters related signals by theme, and writes to a specific reader's context. That's what makes it an agent rather than a script.
 
