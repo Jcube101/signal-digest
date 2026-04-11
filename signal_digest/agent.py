@@ -30,11 +30,14 @@ CRITICAL CONSTRAINTS:
 - Every signal you extract must be directly traceable to the provided article text.
 - Do NOT invent article details, authors, or sources not explicitly listed below.
 - Cross-article synthesis is encouraged (e.g. spotting a trend across multiple articles), but only from the provided set.
+- NEVER reference articles by number (e.g. "Article 3" or "#12"). Always use the source name and a hyperlink.
+- Format every individual signal as a markdown hyperlink: [Source Name: signal text](URL)
+  Use the exact URL provided for that article. Example: [Simon Willison: on-device models are now fast enough for real-time use](https://simonwillison.net/...)
 
 Output format:
 - 3 to 5 theme clusters max
-- Each cluster: a sharp theme title, 2-3 articles with one-line signal each, and a 2-3 sentence "why this matters to you" paragraph
-- End with a single "Signal of the week" — the one thing most worth sitting with
+- Each cluster: a sharp theme title, 2-3 signals formatted as markdown hyperlinks, and a 2-3 sentence "why this matters to you" paragraph
+- End with a single "Signal of the week" — the one thing most worth sitting with, also formatted as a hyperlink
 
 Be ruthless with filtering. 37 mediocre articles is noise. 8 sharp signals is a digest.
 """

@@ -10,11 +10,11 @@ SOURCES = [
     {"name": "Benedict Evans", "url": "https://www.ben-evans.com/benedictevans/rss.xml"},
     {"name": "Salesforce Ben", "url": "https://www.salesforceben.com/feed/"},
     {"name": "Kyle Poyar", "url": "https://kylepoyar.substack.com/feed"},
-    {"name": "The Rundown AI", "url": "https://www.therundown.ai/feed"},
+    {"name": "TLDR AI", "url": "https://tldr.tech/api/rss/ai"},
     {"name": "LangChain Blog", "url": "https://blog.langchain.dev/rss/"},
     {"name": "Hugging Face Blog", "url": "https://huggingface.co/blog/feed.xml"},
     {"name": "Andrew Chen", "url": "https://andrewchen.com/feed/"},
-    {"name": "OpenView Partners", "url": "https://openviewpartners.com/feed/"},
+    {"name": "SaaStr", "url": "https://www.saastr.com/feed/"},
     {"name": "GitHub Changelog", "url": "https://github.blog/changelog/feed/"},
 ]
 

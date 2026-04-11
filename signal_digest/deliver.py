@@ -3,13 +3,25 @@ import os
 import markdown
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def markdown_to_html(text):
+def get_date_range():
+    end = datetime.now()
+    start = end - timedelta(days=6)
+    if start.month == end.month:
+        return f"{start.strftime('%B')} {start.day} \u2013 {end.day}, {end.year}"
+    else:
+        return f"{start.strftime('%B')} {start.day} \u2013 {end.strftime('%B')} {end.day}, {end.year}"
+
+def markdown_to_html(text, date_range=None):
     html_body = markdown.markdown(text, extensions=["extra", "nl2br"])
+
+    header = "<h1>Job's Weekly Signal Digest</h1>"
+    if date_range:
+        header += f'<p class="date-range">{date_range}</p>'
 
     return f"""
     <html>
@@ -85,6 +97,12 @@ def markdown_to_html(text):
                 background: none;
                 padding: 0;
             }}
+            .date-range {{
+                font-size: 14px;
+                color: #888;
+                margin-top: 2px;
+                margin-bottom: 24px;
+            }}
             .footer {{
                 margin-top: 40px;
                 font-size: 13px;
@@ -95,6 +113,7 @@ def markdown_to_html(text):
         </style>
     </head>
     <body>
+        {header}
         {html_body}
         <div class="footer">Signal Digest — running locally on your machine</div>
     </body>
@@ -130,13 +149,14 @@ def send_digest(digest_text):
         return
 
     try:
+        date_range = get_date_range()
         msg = MIMEMultipart("alternative")
         msg["Subject"] = f"📡 Signal Digest — {datetime.now().strftime('%b %d, %Y')}"
-        msg["From"] = sender
+        msg["From"] = f"Signal Digest <{sender}>"
         msg["To"] = recipient
 
         text_part = MIMEText(digest_text, "plain")
-        html_part = MIMEText(markdown_to_html(digest_text), "html")
+        html_part = MIMEText(markdown_to_html(digest_text, date_range), "html")
 
         msg.attach(text_part)
         msg.attach(html_part)

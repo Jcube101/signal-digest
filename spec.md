@@ -23,11 +23,11 @@ The agent is not a summarizer. It makes judgment calls about what matters, clust
 | Benedict Evans | AI PM — tech strategy |
 | Salesforce Ben | RevOps — CRM / Agentforce |
 | Kyle Poyar | RevOps — GTM / growth |
-| The Rundown AI | Agentic AI — daily AI news |
+| TLDR AI | Agentic AI — daily AI news |
 | LangChain Blog | Agentic AI — frameworks and tooling |
 | Hugging Face Blog | Agentic AI — models and open source |
 | Andrew Chen | AI PM — product and growth |
-| OpenView Partners | RevOps — B2B GTM strategy |
+| SaaStr | RevOps — B2B SaaS / GTM strategy |
 | GitHub Changelog | Builder mindset — platform and tooling updates |
 
 ---
