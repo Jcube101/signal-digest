@@ -34,6 +34,12 @@ Run manually:
 python main.py
 ```
 
+Test without sending email or updating the cache:
+
+```bash
+python main.py --dry-run
+```
+
 ---
 
 ## Scheduling

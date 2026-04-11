@@ -157,9 +157,17 @@ During the first run, the agent produced references to articles (Project Glasswi
 
 **HTML rendering** ✓ — Replaced the custom line-by-line regex converter with the `markdown` library (`extra` + `nl2br` extensions). Handles nested markdown, tables, code blocks, and blockquotes correctly — things the regex approach silently broke.
 
-**Source expansion** ✓ — Added 5 feeds: LangChain Blog, Hugging Face Blog (Agentic AI), Andrew Chen (AI PM), OpenView Partners (RevOps), GitHub Changelog (Builder mindset). The agent's system prompt naturally filters new sources through Job's lens — no prompt changes needed.
+**Source expansion** ✓ — Added 5 feeds: LangChain Blog, Hugging Face Blog (Agentic AI), Andrew Chen (AI PM), SaaStr (RevOps), GitHub Changelog (Builder mindset). The agent's system prompt naturally filters new sources through Job's lens — no prompt changes needed. Two broken sources (The Rundown AI, OpenView Partners) were replaced with TLDR AI and SaaStr.
 
 **Cross-platform scheduler** ✓ — Added `scheduler/` with cron, launchd (macOS), and systemd configs so the pipeline isn't tied to Windows Task Scheduler.
+
+**Cache TTL** ✓ — `cache.json` moved from a flat URL list to `{"url": "date_seen"}`. Articles are suppressed for 21 days then automatically re-surface. Old format is migrated on first load.
+
+**Dry-run mode** ✓ — `python main.py --dry-run` bypasses the cache entirely on fetch (so all articles appear regardless of prior runs), skips the cache save, and skips the email send. Useful for testing after source changes without polluting state.
+
+**Signal hyperlinks** ✓ — System prompt now requires every signal to be formatted as `[Source Name: signal text](URL)`. Article number references are explicitly banned. The `markdown` library's `extra` extension renders these as clickable `<a>` tags in the email.
+
+**Email polish** ✓ — HTML email now opens with a fixed "Job's Weekly Signal Digest" `<h1>` (injected by `deliver.py`, not Claude), a dynamic date-range subtitle (e.g. "April 5 – 11, 2026"), and "Signal Digest" as the sender display name.
 
 ---
 
