@@ -1,0 +1,16 @@
+# Environment variables — never commit these
+.env
+
+# Python virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Personal digests — private
+archive/
+
+# Stray folders
+-p/
