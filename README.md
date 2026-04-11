@@ -15,7 +15,7 @@ git clone https://github.com/Jcube101/signal-digest.git
 cd signal-digest
 python -m venv venv
 venv\Scripts\activate        # Windows
-pip install anthropic feedparser python-dotenv
+pip install anthropic feedparser python-dotenv markdown
 ```
 
 Copy `.env.example` to `.env` and fill in your credentials:
