@@ -19,26 +19,43 @@ SOURCES = [
 ]
 
 CACHE_FILE = "cache.json"
+CACHE_TTL_DAYS = 21
 
 def load_cache():
+    """
+    Returns {url: date_first_seen} dict.
+    Migrates old format {"urls": [...]} to new format on first load,
+    treating all existing URLs as seen today.
+    """
     try:
         if os.path.exists(CACHE_FILE):
             with open(CACHE_FILE, "r") as f:
-                return set(json.load(f).get("urls", []))
+                data = json.load(f)
+            # Migrate old format: {"urls": [...], "last_updated": "..."}
+            if "urls" in data:
+                today = datetime.now().strftime("%Y-%m-%d")
+                print(f"  INFO: Migrating cache.json to new format ({len(data['urls'])} entries)")
+                return {url: today for url in data["urls"]}
+            # New format: {"url1": "2026-04-11", ...}
+            return data
     except Exception:
         pass
-    return set()
+    return {}
 
-def save_cache(urls):
+def save_cache(cache):
+    """Saves {url: date_first_seen} dict to cache file."""
     try:
         with open(CACHE_FILE, "w") as f:
-            json.dump({"urls": list(urls), "last_updated": datetime.now().strftime("%Y-%m-%d")}, f, indent=2)
+            json.dump(cache, f, indent=2, sort_keys=True)
     except Exception as e:
         print(f"  WARNING: Cache save error: {e}")
 
-def fetch_recent_articles(days_back=7):
+def fetch_recent_articles(days_back=7, dry_run=False):
     cutoff = datetime.now() - timedelta(days=days_back)
-    seen_urls = load_cache()
+    prune_cutoff = datetime.now() - timedelta(days=CACHE_TTL_DAYS)
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    cache = load_cache()
     articles = []
     failed_sources = []
 
@@ -64,9 +81,15 @@ def fetch_recent_articles(days_back=7):
 
                 url = entry.get("link", "")
 
-                # skip if already seen in a previous run
-                if url in seen_urls:
-                    continue
+                # skip if seen within the last CACHE_TTL_DAYS days
+                if url in cache:
+                    try:
+                        seen_date = datetime.strptime(cache[url], "%Y-%m-%d")
+                    except ValueError:
+                        seen_date = datetime.min
+                    if seen_date >= prune_cutoff:
+                        continue
+                    # seen_date is older than TTL — treat as new (entry refreshed on save)
 
                 articles.append({
                     "source": source["name"],
@@ -84,7 +107,9 @@ def fetch_recent_articles(days_back=7):
     if failed_sources:
         print(f"\nFailed sources ({len(failed_sources)}): {', '.join(failed_sources)}")
 
-    save_cache(seen_urls | {a["url"] for a in articles})
+    if not dry_run:
+        updated_cache = {**cache, **{a["url"]: today for a in articles}}
+        save_cache(updated_cache)
 
     print(f"\nFetched {len(articles)} new articles from the last {days_back} days")
     return articles
