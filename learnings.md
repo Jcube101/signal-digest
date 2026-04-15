@@ -171,6 +171,16 @@ During the first run, the agent produced references to articles (Project Glasswi
 
 ---
 
+## What I learned about deployment
+
+A fixed schedule assumes the machine is always on at the right time. It isn't. The more robust pattern is event-driven: trigger on login, let the deduplication layer decide whether there is anything worth running. This shifts the reliability burden from the scheduler to the data — which is where it belongs.
+
+Silent failures are worse than loud ones. Adding stdout and stderr logging to the bat file meant the first Task Scheduler failure was diagnosable in seconds instead of being invisibly missed. Logging is not optional in unattended systems.
+
+Task Scheduler runs in a minimal environment. Venv activation does not work the same way it does in an interactive terminal. Calling the venv Python via its full absolute path is the correct pattern for any scheduled task on Windows.
+
+---
+
 ## What's still worth building
 
 **Memory** — store the agent's previous digests and let it notice patterns over time. "This is the third week Simon Willison has written about on-device AI — this is now a trend, not a signal."

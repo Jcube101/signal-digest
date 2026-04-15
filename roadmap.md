@@ -12,6 +12,8 @@
 - [x] Email polish — "Job's Weekly Signal Digest" heading, dynamic date range subtitle, "Signal Digest" sender display name
 - [x] Dry-run mode — `python main.py --dry-run` tests full pipeline without touching cache or sending email
 - [x] Deduplication pruning — cache entries expire after 21 days; articles re-surface automatically
+- [x] At-login trigger — replaced fixed Monday 10 AM schedule; agent runs on first login of any day, deduplication handles frequency
+- [x] Scheduler logging — stdout and stderr redirected to `scheduler_log.txt` for silent failure visibility
 
 ## Longer term
 

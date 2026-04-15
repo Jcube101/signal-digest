@@ -7,7 +7,7 @@ Scheduler → Fetcher → Agent → Delivery
 1. **Fetcher** pulls articles from 12 RSS sources published in the last 7 days; skips URLs cached within the last 21 days (`cache.json`); URLs older than 21 days are treated as new again
 2. **Agent** reasons over the content — filtering, clustering, extracting signals as markdown hyperlinks `[Source: signal text](url)`, constrained to only the provided articles
 3. **Delivery** converts the digest to HTML via the `markdown` library; email opens with "Job's Weekly Signal Digest" heading and a dynamic date range (e.g. "April 5 – 11, 2026"); saves a local markdown copy to `archive/`
-4. **Scheduler** runs the whole pipeline every Monday at 10 AM (Windows Task Scheduler, cron, launchd, or systemd — see `scheduler/`)
+4. **Scheduler** triggers on user login (Windows Task Scheduler at-login trigger via `run_tracker.bat`). The 21-day deduplication cache ensures the digest only delivers when new content exists — running on every login is harmless. Output and errors are logged to `scheduler_log.txt`. Linux/macOS users should use the cron/launchd/systemd configs in `scheduler/` on a weekly cadence.
 
 The agent is not a summarizer. It makes judgment calls about what matters, clusters related signals by theme, and writes to a specific reader's context. That's what makes it an agent rather than a script.
 
@@ -47,7 +47,8 @@ signal-digest/
 │   ├── launchd.plist   # macOS LaunchAgent
 │   └── systemd/        # Linux systemd service + timer
 ├── main.py             # Entry point
-├── run_tracker.bat     # Windows Task Scheduler trigger
+├── run_tracker.bat     # Windows Task Scheduler trigger (at-login, absolute venv path, logs to scheduler_log.txt)
+├── scheduler_log.txt   # stdout/stderr from scheduled runs — not committed
 ├── CLAUDE.md           # Project context for Claude
 ├── spec.md             # This file — architecture and design
 ├── roadmap.md          # Known limitations and future work
