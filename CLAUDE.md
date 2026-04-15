@@ -25,15 +25,16 @@ signal-digest/
 │   ├── fetcher.py       # pulls RSS feeds, filters by date, deduplicates via cache.json
 │   ├── agent.py         # Claude reasoning loop — the actual agent
 │   └── deliver.py       # HTML email (via markdown library) + local archive
-├── scheduler/           # cross-platform scheduler configs
+├── scheduler/           # cross-platform scheduler configs (Linux/macOS)
 │   ├── cron.md          # Linux cron setup
 │   ├── launchd.plist    # macOS LaunchAgent
 │   └── systemd/         # Linux systemd service + timer
 ├── archive/             # weekly digests saved as markdown
 ├── main.py              # entry point
-├── run_tracker.bat      # Windows Task Scheduler trigger
+├── run_tracker.bat      # Windows Task Scheduler trigger — calls venv Python via absolute path, logs to scheduler_log.txt
 ├── .env                 # API key + email credentials (not committed)
 ├── cache.json           # URL cache with 21-day TTL — prevents re-surfacing (not committed)
+├── scheduler_log.txt    # stdout/stderr from scheduled runs (not committed)
 ├── CLAUDE.md            # this file
 ├── spec.md              # architecture, sources, stack
 ├── roadmap.md           # what's done and what's next
@@ -45,7 +46,7 @@ signal-digest/
 2. `agent.py` sends all new articles to Claude with a persona-specific system prompt
 3. Claude filters ruthlessly, extracts signals as markdown hyperlinks, clusters by theme, writes digest — constrained to only reason over the provided articles
 4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it (with "Job's Weekly Signal Digest" heading and date range), saves a `.md` copy to `archive/`
-5. Windows Task Scheduler runs `run_tracker.bat` every Monday at 10 AM IST (Linux/macOS configs in `scheduler/`)
+5. Windows Task Scheduler runs `run_tracker.bat` on every login — deduplication ensures the digest only delivers when genuinely new content exists. Output and errors are logged to `scheduler_log.txt`. (Linux/macOS: use cron/launchd/systemd configs in `scheduler/`)
 6. Run `python main.py --dry-run` to test the full pipeline without updating the cache or sending email
 
 ## RSS Sources (defined in fetcher.py)
