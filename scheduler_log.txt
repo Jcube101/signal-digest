@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "C:\Users\jobjo\Github\signal_digest\main.py", line 4, in <module>
+    from signal_digest.deliver import send_digest
+  File "C:\Users\jobjo\Github\signal_digest\signal_digest\deliver.py", line 3, in <module>
+    import markdown
+ModuleNotFoundError: No module named 'markdown'
+Fetching: Simon Willison...
+Fetching: Lenny's Newsletter...
+Fetching: Hacker News...
+Fetching: Benedict Evans...
+Fetching: Salesforce Ben...
+Fetching: Kyle Poyar...
+Fetching: TLDR AI...
+Fetching: LangChain Blog...
+Fetching: Hugging Face Blog...
+Fetching: Andrew Chen...
+Fetching: SaaStr...
+Fetching: GitHub Changelog...
+
+Fetched 1 new articles from the last 7 days
+Running agent...
+
+============================================================
+SIGNAL DIGEST — WEEKLY DIGEST
+============================================================
+
+# Weekly Signal Digest
+
+I need to be direct with you: the article list you've provided contains only one entry, and it's about saying goodbye to Agile methodology.
+
+**Assessment:** This article doesn't pass the filter for your lens. While methodology debates can be interesting, "goodbye to Agile" pieces are typically retrospectives on process frustration rather than forward-looking signals about agentic AI, AI-native product thinking, RevOps automation, or builder tools. Without access to the actual article content beyond the title, I can't extract a meaningful signal — and even if I could, process methodology critiques rarely shift thinking for someone building at the AI/product intersection.
+
+---
+
+**What I'd need to produce a useful digest:**
+
+A typical week's feed for your interests would include 20-40 articles across sources like:
+- Simon Willison's blog (LLM tooling, agent patterns)
+- Lenny's Newsletter or other PM-focused writing
+- Latent Space, AI engineering deep dives
+- RevOps/GTM tooling announcements
+- GitHub trending repos, new open source releases
+
+If you have additional articles from this week's feeds, send them over and I'll filter properly.
+
+---
+
+**One meta-signal worth noting:** If your RSS feeds or aggregators are surfacing mostly process/methodology content rather than builder-focused AI content, that's a curation problem worth solving. Your signal sources should match your identity shift toward AI PM and builder.
+Digest saved to archive/digest_2026-04-15.md
+Digest sent to your inbox.

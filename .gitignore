@@ -19,4 +19,4 @@ cache.json
 logs/
 
 # Stray folders
--p/
+-p/scheduler_log.txt
