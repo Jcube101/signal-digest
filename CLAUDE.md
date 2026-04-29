@@ -6,15 +6,16 @@ A personal AI agent that monitors a curated list of RSS feeds, filters articles 
 ## Owner
 Job Joseph — Principal Program Manager, Revenue Operations. AI PM identity. Builder. Portfolio at job-joseph.com, GitHub at Jcube101.
 
-## Project location
-`C:\Users\jobjo\Github\signal-digest`
+## Project locations
+- **Production (Raspberry Pi 5, headless):** `/home/jcube/projects/signal-digest`
+- **Development (Windows):** `C:\Users\jobjo\Github\signal-digest`
 
 ## Stack
 - **Language**: Python 3.11.9
 - **LLM**: Claude via Anthropic API (`claude-opus-4-5`)
 - **Libraries**: `anthropic`, `feedparser`, `python-dotenv`, `markdown`
 - **Delivery**: Gmail via SMTP SSL
-- **Scheduler**: Windows Task Scheduler → `run_tracker.bat` (cron/launchd/systemd configs also in `scheduler/`)
+- **Scheduler**: systemd timer on Raspberry Pi (production); Windows Task Scheduler via `run_tracker.bat` (development). Additional cron/launchd configs in `scheduler/`.
 - **Environment**: `.env` file with `ANTHROPIC_API_KEY`, `EMAIL_ADDRESS`, `EMAIL_PASSWORD`
 
 ## Project structure
@@ -46,7 +47,7 @@ signal-digest/
 2. `agent.py` sends all new articles to Claude with a persona-specific system prompt
 3. Claude filters ruthlessly, extracts signals as markdown hyperlinks, clusters by theme, writes digest — constrained to only reason over the provided articles
 4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it (with "Job's Weekly Signal Digest" heading and date range), saves a `.md` copy to `archive/`
-5. Windows Task Scheduler runs `run_tracker.bat` on every login — deduplication ensures the digest only delivers when genuinely new content exists. Output and errors are logged to `scheduler_log.txt`. (Linux/macOS: use cron/launchd/systemd configs in `scheduler/`)
+5. **Production (Raspberry Pi 5):** `signal-digest.timer` and `signal-digest.service` (systemd) run the agent every Monday at 10:00 AM IST. **Development (Windows):** Task Scheduler runs `run_tracker.bat` on login; deduplication prevents duplicate deliveries. Output and errors are logged to `scheduler_log.txt`. Other Linux/macOS options are in `scheduler/`.
 6. Run `python main.py --dry-run` to test the full pipeline without updating the cache or sending email
 
 ## RSS Sources (defined in fetcher.py)

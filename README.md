@@ -44,9 +44,26 @@ python main.py --dry-run
 
 ## Scheduling
 
-**Windows:** Use Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
+### Linux / Raspberry Pi (systemd timer)
 
-**Linux / macOS:** See the `scheduler/` directory for cron, launchd (macOS), and systemd configs.
+The recommended production setup uses systemd. Config files are in `scheduler/systemd/`:
+
+1. Edit `signal-digest.service` and `signal-digest.timer` to set your project path
+2. Copy both files to `~/.config/systemd/user/`
+3. Enable and start the timer:
+
+```bash
+systemctl --user enable signal-digest.timer
+systemctl --user start signal-digest.timer
+```
+
+The timer runs every Monday at 10:00 AM (local time). Check status with `systemctl --user status signal-digest.timer`.
+
+See `scheduler/` for alternative Linux (cron) and macOS (launchd) configs.
+
+### Windows (Task Scheduler)
+
+Use Task Scheduler to run `run_tracker.bat` on a weekly schedule. Set the trigger to your preferred day and time. Ensure the machine is plugged in and not set to sleep during the scheduled run.
 
 ---
 
