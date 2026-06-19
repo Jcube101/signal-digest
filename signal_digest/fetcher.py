@@ -13,8 +13,12 @@ SOURCES = [
     {"name": "TLDR AI", "url": "https://tldr.tech/api/rss/ai"},
     {"name": "LangChain Blog", "url": "https://blog.langchain.dev/rss/"},
     {"name": "Hugging Face Blog", "url": "https://huggingface.co/blog/feed.xml"},
+    {"name": "Latent Space", "url": "https://www.latent.space/feed"},
+    {"name": "Import AI", "url": "https://importai.substack.com/feed"},
     {"name": "Andrew Chen", "url": "https://andrewchen.com/feed/"},
+    {"name": "One Useful Thing", "url": "https://www.oneusefulthing.org/feed"},
     {"name": "SaaStr", "url": "https://www.saastr.com/feed/"},
+    {"name": "Tomasz Tunguz", "url": "https://www.tomtunguz.com/index.xml"},
     {"name": "GitHub Changelog", "url": "https://github.blog/changelog/feed/"},
 ]
 

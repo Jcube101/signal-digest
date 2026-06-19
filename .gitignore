@@ -17,6 +17,4 @@ cache.json
 
 # Scheduler logs
 logs/
-
-# Stray folders
--p/scheduler_log.txt
+scheduler_log.txt

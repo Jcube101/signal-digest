@@ -43,7 +43,7 @@ signal-digest/
 ```
 
 ## How it works
-1. `fetcher.py` pulls articles from 12 RSS sources published in the last 7 days, skipping URLs cached in `cache.json` within the last 21 days
+1. `fetcher.py` pulls articles from 16 RSS sources published in the last 7 days, skipping URLs cached in `cache.json` within the last 21 days
 2. `agent.py` sends all new articles to Claude with a persona-specific system prompt
 3. Claude filters ruthlessly, extracts signals as markdown hyperlinks, clusters by theme, writes digest — constrained to only reason over the provided articles
 4. `deliver.py` converts markdown to HTML via the `markdown` library, emails it (with "Job's Weekly Signal Digest" heading and date range), saves a `.md` copy to `archive/`
@@ -62,8 +62,12 @@ signal-digest/
 | TLDR AI | Agentic AI — daily AI news |
 | LangChain Blog | Agentic AI — frameworks and tooling |
 | Hugging Face Blog | Agentic AI — models and open source |
+| Latent Space | Agentic AI / Builder — AI engineering, practitioner depth |
+| Import AI | Agentic AI — frontier research synthesis (Jack Clark) |
 | Andrew Chen | AI PM — product and growth |
+| One Useful Thing | AI PM — applied AI in practice (Ethan Mollick) |
 | SaaStr | RevOps — B2B SaaS / GTM strategy |
+| Tomasz Tunguz | RevOps — SaaS metrics / GTM benchmarks |
 | GitHub Changelog | Builder mindset — platform and tooling updates |
 
 ## Job's lens (defined in agent.py system prompt)
